@@ -8,6 +8,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use("/users", require("./routes/user"))
 app.use("/categories", require("./routes/category"))
 app.use("/goals", require("./routes/goal"))
+app.use("/transactions", require("./routes/transaction"))
 app.use("/install", require("./routes/install"))
 
 

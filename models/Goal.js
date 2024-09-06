@@ -25,7 +25,23 @@ const GoalModel = sequelize.define('Goal',
         target_date: {
           type: DataTypes.DATE,
           allowNull: true,
-        }
+        },
+        userId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: {
+              model: UserModel,
+              key: 'id'
+          }
+      },
+      categoryId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: {
+              model: CategoryModel,
+              key: 'id'
+          }
+      }
     }
 );
 
@@ -37,11 +53,6 @@ GoalModel.belongsTo(UserModel, {
 GoalModel.belongsTo(CategoryModel, {
     foreignKey: 'categoryId', 
     as: 'category'
-});
-
-UserModel.hasMany(GoalModel, {
-    foreignKey: 'userId',
-    as: 'goals'
 });
 
 module.exports = GoalModel;

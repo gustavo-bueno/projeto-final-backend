@@ -17,10 +17,20 @@ const CategoryModel = sequelize.define('Category',
           allowNull: true,
         },
         type: {
-          type: DataTypes.STRING,
-          allowNull: true,
+          type: DataTypes.ENUM('Transaction', 'Goal'),
+          allowNull: false,
         },
     }
 )
+
+CategoryModel.hasMany(TransactionModel, {
+  foreignKey: 'categoryId',
+  as: 'transactions'
+});
+
+CategoryModel.hasMany(GoalModel, {
+  foreignKey: 'categoryId',
+  as: 'goals'
+});
 
 module.exports = CategoryModel

@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize")
-const sequelize = require("../helpers/db")
+const sequelize = require("../helpers/db");
+const GoalModel = require("./Goal");
 
 const UserModel = sequelize.define('User', 
     {
@@ -27,5 +28,15 @@ const UserModel = sequelize.define('User',
         }
     }
 )
+
+UserModel.hasMany(GoalModel, {
+  foreignKey: 'userId',
+  as: 'goals'
+});
+
+UserModel.hasMany(TransactionModel, {
+  foreignKey: 'userId',
+  as: 'transactions'
+});
 
 module.exports = UserModel
