@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const CategoryDAO = require('../services/CategoryDAO');
 const { isAdmin } = require('../middlewares/auth');
+const { updateCategorySchema, categorySchema } = require("../validators/category");
 
 router.get("/", async (req, res) => {
   const { limit, page } = req.query;
@@ -16,6 +17,12 @@ router.get("/", async (req, res) => {
 })
 
 router.post("/", isAdmin, async (req, res) => {
+  const { error } = categorySchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errors = error.details.map(detail => detail.message);
+    return res.status(400).json({ errors });
+  }
+
   const { name, description, type } = req.body;
 
   try {
@@ -47,6 +54,12 @@ router.delete("/:id", isAdmin, async (req, res) => {
 });
 
 router.put("/:id", isAdmin, async (req, res) => {
+  const { error } = updateCategorySchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errors = error.details.map(detail => detail.message);
+    return res.status(400).json({ errors });
+  }
+
   const { id } = req.params;
   const { description, name, type } = req.body;
 

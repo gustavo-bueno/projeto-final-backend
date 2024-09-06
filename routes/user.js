@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const UserDAO = require('../services/UserDAO');
 const { isAdmin } = require('../middlewares/auth');
+const { authSchema, userSchema } = require("../validators/user");
 
 router.get("/", async (req, res) => {
   const { limit = 10, page = 1 } = req.query;
@@ -17,6 +18,12 @@ router.get("/", async (req, res) => {
 })
 
 router.post("/", async (req, res) => {
+  const { error } = userSchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errors = error.details.map(detail => detail.message);
+    return res.status(400).json({ errors });
+  }
+
   const { name, password, email } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -29,11 +36,20 @@ router.post("/", async (req, res) => {
     });
     res.status(201).json({ message: 'Usuário criado com sucesso', user });
   } catch (err) {
+    if(err.errors[0].type == "unique violation") {
+      res.status(400).json({ message: 'Já existe um usuário com esse email' });
+    }
     res.status(500).json({ error: 'Falha ao criar usuário' });
   }
 })
 
 router.post("/auth", async (req, res) => {
+  const { error } = authSchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errors = error.details.map(detail => detail.message);
+    return res.status(400).json({ errors });
+  }
+
   const { email, password } = req.body;
 
   try {
@@ -49,6 +65,12 @@ router.post("/auth", async (req, res) => {
 })
 
 router.post("/admin", isAdmin, async (req, res) => {
+  const { error } = userSchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errors = error.details.map(detail => detail.message);
+    return res.status(400).json({ errors });
+  }
+
   const { name, email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -87,6 +109,11 @@ router.delete("/:id", isAdmin, async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
+  const { error } = userSchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errors = error.details.map(detail => detail.message);
+    return res.status(400).json({ errors });
+  }
   const { password, name } = req.body;
   const hashedPassword = password ? await bcrypt.hash(password, 10) : null;
 
@@ -101,6 +128,10 @@ router.put("/:id", async (req, res) => {
 
     if (name) {
       user.name = name;
+    }
+
+    if(email) {
+      user.email = email;
     }
 
     if (hashedPassword) {

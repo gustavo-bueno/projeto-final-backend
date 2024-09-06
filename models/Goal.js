@@ -18,6 +18,10 @@ const GoalModel = sequelize.define('Goal',
           type: DataTypes.DECIMAL(10, 2),
           allowNull: false,
         },
+        currentAmount: {
+          type: DataTypes.DECIMAL(10, 2),
+          defaultValue: 0,
+        },
         description: {
           type: DataTypes.STRING,
           allowNull: true,

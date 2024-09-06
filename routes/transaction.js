@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const TransactionDAO = require('../services/TransactionDAO');
 const { isAuthenticated } = require('../middlewares/auth'); 
+const { transactionSchema, updateTransactionSchema } = require("../validators/transaction");
 
 router.get("/", isAuthenticated, async (req, res) => {
   const { limit, page } = req.query;
@@ -16,8 +17,13 @@ router.get("/", isAuthenticated, async (req, res) => {
   }
 });
 
-// Criar uma nova transação
 router.post("/", isAuthenticated, async (req, res) => {
+  const { error } = transactionSchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errors = error.details.map(detail => detail.message);
+    return res.status(400).json({ errors });
+  }
+
   const { name, description, type, date, categoryId } = req.body;
   const userId = req.user.id;
 
@@ -37,8 +43,13 @@ router.post("/", isAuthenticated, async (req, res) => {
   }
 });
 
-
 router.put("/:id", isAuthenticated, async (req, res) => {
+  const { error } = updateTransactionSchema.validate(req.body, { abortEarly: false });
+  if (error) {
+    const errors = error.details.map(detail => detail.message);
+    return res.status(400).json({ errors });
+  }
+
   const { id } = req.params;
   const { name, description, type, date, categoryId } = req.body;
 
