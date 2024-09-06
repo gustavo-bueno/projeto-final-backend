@@ -1,5 +1,19 @@
 const jwt = require('jsonwebtoken');
 
+const isAuthenticated = (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Token é obrigatório' });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) return res.status(403).json({ error: 'Token inválido' });
+    if(user) {
+      req.user = user;
+      next();
+    }
+  });
+
+};
+
 const isAdmin = (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Token é obrigatório' });
@@ -12,4 +26,4 @@ const isAdmin = (req, res, next) => {
 
 };
 
-module.exports = { isAdmin };
+module.exports = { isAdmin, isAuthenticated };
