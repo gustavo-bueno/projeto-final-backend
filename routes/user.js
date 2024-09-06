@@ -5,9 +5,11 @@ const jwt = require('jsonwebtoken');
 const UserDAO = require('../services/UserDAO');
 const { isAdmin } = require('../middlewares/auth');
 
-router.get("/", async (_, res) => {
+router.get("/", async (req, res) => {
+  const { limit, page } = req.query;
+
   try {
-    const users = await UserDAO.list()
+    const users = await UserDAO.list(page, limit)
     res.status(201).json({ status: true, users });
   } catch (err) {
     res.status(500).json({ error: 'Falha ao listar usuários' });
@@ -98,8 +100,14 @@ router.put("/:id", async (req, res) => {
       return res.status(403).json({ error: 'Não é possível editar informações dos usuários admin' });
     }
 
-    user.name = name;
-    user.password = hashedPassword;
+    if(name) {
+      user.name = name;
+    }
+
+    if(password) {
+      user.password = hashedPassword;
+    }
+
     await user.save();
 
     res.json({ message: 'Usuário atualizado com sucesso!' });

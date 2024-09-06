@@ -1,8 +1,12 @@
 const UserModel = require('../models/User')
 
 module.exports = {
-    list: async function() {
-        const users = await UserModel.findAll()
+    list: async function(page = 1, limit = 10) {
+        const offset = (page - 1) * limit;
+        const users = await UserModel.findAll({
+            offset,
+            limit
+        })
         return users
     },
     save: async function(userData) {
