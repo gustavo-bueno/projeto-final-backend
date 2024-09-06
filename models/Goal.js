@@ -45,6 +45,16 @@ const GoalModel = sequelize.define('Goal',
     }
 );
 
+UserModel.hasMany(GoalModel, {
+  foreignKey: 'userId',
+  as: 'goals'
+});
+
+CategoryModel.hasMany(GoalModel, {
+  foreignKey: 'categoryId',
+  as: 'goals'
+});
+
 GoalModel.belongsTo(UserModel, {
     foreignKey: 'userId', 
     as: 'user'

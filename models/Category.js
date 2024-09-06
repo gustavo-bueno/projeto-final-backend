@@ -23,14 +23,5 @@ const CategoryModel = sequelize.define('Category',
     }
 )
 
-CategoryModel.hasMany(TransactionModel, {
-  foreignKey: 'categoryId',
-  as: 'transactions'
-});
-
-CategoryModel.hasMany(GoalModel, {
-  foreignKey: 'categoryId',
-  as: 'goals'
-});
 
 module.exports = CategoryModel

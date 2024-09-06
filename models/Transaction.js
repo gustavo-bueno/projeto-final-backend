@@ -43,6 +43,16 @@ const TransactionModel = sequelize.define('Transaction', {
     }
 });
 
+CategoryModel.hasMany(TransactionModel, {
+    foreignKey: 'categoryId',
+    as: 'transactions'
+});
+
+UserModel.hasMany(TransactionModel, {
+    foreignKey: 'userId',
+    as: 'transactions'
+});
+
 TransactionModel.belongsTo(UserModel, { foreignKey: 'userId' });
 TransactionModel.belongsTo(CategoryModel, { foreignKey: 'categoryId' });
 
