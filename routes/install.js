@@ -135,7 +135,8 @@ router.get('/', async (_, res) => {
         type: 'expense',
         date: '2024-02-15',
         userId: 3, 
-        categoryId: 1 
+        categoryId: 1,
+        amount: 1000
       },
       {
         name: 'Bônus de fim de ano',
@@ -143,7 +144,8 @@ router.get('/', async (_, res) => {
         type: 'income',
         date: '2023-12-20',
         userId: 4,
-        categoryId: 2
+        categoryId: 2,
+        amount: 5000
       },
       {
         name: 'Jantar em restaurante',
@@ -151,7 +153,8 @@ router.get('/', async (_, res) => {
         type: 'expense',
         date: '2024-03-10',
         userId: 5,
-        categoryId: 4 
+        categoryId: 4 ,
+        amount: 250
       },
       {
         name: 'Venda de itens usados',
@@ -159,7 +162,8 @@ router.get('/', async (_, res) => {
         type: 'income',
         date: '2024-01-05',
         userId: 3, 
-        categoryId: 3 
+        categoryId: 3,
+        amount: 400
       },
       {
         name: 'Curso online de programação',
@@ -167,7 +171,8 @@ router.get('/', async (_, res) => {
         type: 'expense',
         date: '2024-04-01',
         userId: 4,
-        categoryId: 2 
+        categoryId: 2,
+        amount: 499.99 
       }
     ]
 

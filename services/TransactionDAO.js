@@ -1,4 +1,5 @@
 const TransactionModel = require('../models/Transaction');
+const { Op } = require('sequelize');
 
 module.exports = {
     listByUser: async function(userId, page = 1, limit = 10) {
@@ -14,11 +15,6 @@ module.exports = {
         const transaction = await TransactionModel.create(transactionData);
         return transaction;
     },
-    update: async function(id, transactionData) {
-        return await TransactionModel.update(transactionData, {
-            where: { id }
-        });
-    },
     delete: async function(id) {
         return await TransactionModel.destroy({
             where: { id }
@@ -26,5 +22,15 @@ module.exports = {
     },
     getById: async function(id) {
         return await TransactionModel.findByPk(id);
+    },
+    getBalanceForPeriod: async function(userId, startDate, endDate) {
+        return await TransactionModel.findAll({
+            where: {
+                userId,
+                date: {
+                    [Op.between]: [startDate, endDate]
+                }
+            }
+        });
     }
 };

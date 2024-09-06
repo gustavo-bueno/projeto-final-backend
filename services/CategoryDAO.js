@@ -13,11 +13,6 @@ module.exports = {
         const user = await CategoryModel.create(categoryData)
         return user
     },
-    update: async function(id, categoryData) {
-        return await CategoryModel.update(categoryData, {
-            where: { id }
-        })
-    },
     delete: async function(id) {
         // Precisa fazer algo para os livros que este autor possui
         return await CategoryModel.destroy({where: { id }})

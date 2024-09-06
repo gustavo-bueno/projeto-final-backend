@@ -3,6 +3,7 @@ const router = express.Router();
 const TransactionDAO = require('../services/TransactionDAO');
 const { isAuthenticated } = require('../middlewares/auth'); 
 const { transactionSchema, updateTransactionSchema } = require("../validators/transaction");
+const { formatPrice } = require("../utils/goals")
 
 router.get("/", isAuthenticated, async (req, res) => {
   const { limit, page } = req.query;
@@ -42,6 +43,38 @@ router.post("/", isAuthenticated, async (req, res) => {
     res.status(500).json({ error: 'Falha ao criar transação' });
   }
 });
+
+router.get("/balance", isAuthenticated, async (req, res) => {
+  const { startDate, endDate } = req.query;
+  const userId = req.user.id;
+
+  if (!startDate || !endDate) {
+    return res.status(400).json({ error: 'startDate e a endDate são obrigatórias.' });
+  }
+
+  try {
+    const transactions  = await TransactionDAO.getBalanceForPeriod(userId, startDate, endDate);
+
+    if(!transactions.length) {
+       res.status(400).json({ error: 'Não foram encontradas transações nesse período.' }); 
+    }
+
+    const balance = transactions.reduce((acc, transaction) => {
+      if (transaction.type === 'income') {
+          return acc + parseFloat(transaction.amount);
+      } else if (transaction.type === 'expense') {
+          return acc - parseFloat(transaction.amount);
+      }
+      return acc;
+    }, 0);
+
+    res.status(200).json({ status: true, balance: formatPrice(balance), transactions });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: 'Falha ao calcular o saldo para o período.' });
+  }
+});
+
 
 router.put("/:id", isAuthenticated, async (req, res) => {
   const { error } = updateTransactionSchema.validate(req.body, { abortEarly: false });

@@ -17,6 +17,10 @@ const TransactionModel = sequelize.define('Transaction', {
         type: DataTypes.STRING,
         allowNull: true,
     },
+    amount: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+    },
     type: {
         type: DataTypes.ENUM('income', 'expense'), 
         allowNull: false,

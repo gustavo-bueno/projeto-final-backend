@@ -14,11 +14,6 @@ module.exports = {
       const goal = await GoalModel.create(goalData);
       return goal;
   },
-  update: async function(id, goalData) {
-      return await GoalModel.update(goalData, {
-          where: { id }
-      });
-  },
   delete: async function(id) {
       return await GoalModel.destroy({ where: { id } });
   },
