@@ -18,4 +18,10 @@ module.exports = {
         // Precisa fazer algo para os livros que este autor possui
         return await UserModel.destroy({where: { id }})
     },
+    findUserByEmail: async function(email) {
+        return await UserModel.findOne({ where: { email } })
+    },
+    getById: async function (id) {
+        return await UserModel.findByPk(id);
+    }
 }
