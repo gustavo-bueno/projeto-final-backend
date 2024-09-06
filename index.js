@@ -6,6 +6,7 @@ const app = express()
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use("/users", require("./routes/user"))
+app.use("/categories", require("./routes/category"))
 app.use("/install", require("./routes/install"))
 
 

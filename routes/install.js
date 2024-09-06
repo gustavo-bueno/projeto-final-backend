@@ -3,6 +3,7 @@ const router = express.Router()
 const sequelize = require("../helpers/db")
 const UserDAO = require("../services/UserDAO")
 const bcrypt = require('bcrypt');
+const CategoryDAO = require("../services/CategoryDAO");
 
 router.get('/', async (_, res) => {
     await sequelize.sync({force: true})
@@ -44,9 +45,43 @@ router.get('/', async (_, res) => {
       }
     ]
 
+    const categories = [
+      {
+        name: 'Alimentação',
+        description: 'Alimentos em geral',
+        type: 'Transaction'
+      },
+      {
+        name: 'Moradia',
+        description: 'Despesas com a casa',
+        type: 'Transaction'
+      },
+      {
+        name: 'Mercado',
+        description: 'Compras gerais',
+        type: 'Transaction'
+      },
+      {
+        name: 'Lazer',
+        description: 'Compras para lazer',
+        type: 'Transaction'
+      },
+      {
+        name: 'Casa',
+        description: 'Categoria para a meta casa',
+        type: 'Goals'
+      },
+      {
+        name: 'Carro',
+        description: 'Categoria para a meta carro',
+        type: 'Goals'
+      }
+    ]
+
+    const createdCategories = await Promise.all(categories.map((category) => CategoryDAO.save(category)))
     const createdUsers = await Promise.all(users.map((user) => UserDAO.save(user)))
 
-    res.json({status:true, users: createdUsers })
+    res.json({status:true, users: createdUsers, categories: createdCategories })
 })
 
 module.exports = router
