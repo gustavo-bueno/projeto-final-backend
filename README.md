@@ -26,6 +26,6 @@ O servidor estará rodando em `http://localhost:3000`.
 ## Endpoints principais
 
 - **GET /install**: Inicializa o banco de dados e cria as tabelas.
-- **GET /install**: Acessar a documentação da aplicação
+- **GET /docs**: Acessar a documentação da aplicação
 
 ---
