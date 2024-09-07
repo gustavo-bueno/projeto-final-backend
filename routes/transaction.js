@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const TransactionDAO = require('../services/TransactionDAO');
-const { isAuthenticated } = require('../middlewares/auth'); 
+const { isAuthenticated, isAdmin } = require('../middlewares/auth'); 
 const { transactionSchema, updateTransactionSchema } = require("../validators/transaction");
 const { formatPrice } = require("../utils/goals")
 
@@ -13,10 +13,21 @@ router.get("/", isAuthenticated, async (req, res) => {
     const transactions = await TransactionDAO.listByUser(userId, page, limit);
     res.status(200).json({ status: true, transactions });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ error: 'Falha ao listar transações' });
   }
 });
+
+router.get("/categories/:categoryId", isAdmin, async(req, res) => {
+  const { limit = 10, page = 1 } = req.query;
+  const { categoryId } = req.params;
+
+  try {
+    const transactions = await TransactionDAO.listByCategory(categoryId, page, limit);
+    res.status(200).json({ transactions });
+  } catch (err) {
+    res.status(500).json({ error: 'Falha ao listar transações por categoria' });
+  }
+})
 
 router.post("/", isAuthenticated, async (req, res) => {
   const { error } = transactionSchema.validate(req.body, { abortEarly: false });

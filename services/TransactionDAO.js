@@ -11,6 +11,15 @@ module.exports = {
         });
         return transactions;
     },
+    listByCategory: async function(categoryId, page = 1, limit = 10) {
+        const offset = (page - 1) * limit;
+        const transactions = await TransactionModel.findAll({
+            where: { categoryId },
+            offset,
+            limit
+        });
+        return transactions;
+    },
     save: async function(transactionData) {
         const transaction = await TransactionModel.create(transactionData);
         return transaction;
