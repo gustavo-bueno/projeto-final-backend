@@ -14,7 +14,6 @@ module.exports = {
         return user
     },
     delete: async function(id) {
-        // Precisa fazer algo para os livros que este autor possui
         return await CategoryModel.destroy({where: { id }})
     },
     getById: async function (id) {

@@ -14,7 +14,6 @@ module.exports = {
         return user
     },
     delete: async function(id) {
-        // Precisa fazer algo para os livros que este autor possui
         return await UserModel.destroy({where: { id }})
     },
     findUserByEmail: async function(email) {
