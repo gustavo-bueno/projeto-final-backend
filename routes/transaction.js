@@ -70,11 +70,12 @@ router.get("/balance", isAuthenticated, async (req, res) => {
 
     res.status(200).json({ status: true, balance: formatPrice(balance), transactions });
   } catch (err) {
-    console.log(err);
+    if(err?.parent?.routine == "DateTimeParseError") {
+      res.status(400).json({ error: 'Verifique as datas inseridas.' });
+    }
     res.status(500).json({ error: 'Falha ao calcular o saldo para o período.' });
   }
 });
-
 
 router.put("/:id", isAuthenticated, async (req, res) => {
   const { error } = updateTransactionSchema.validate(req.body, { abortEarly: false });
